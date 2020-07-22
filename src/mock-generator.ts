@@ -121,9 +121,6 @@ class MockGenerator {
     };
     console.log('Creating block #' + template.height, template.id);
     this.blocks.push(template);
-    if (this.blocks.length > 16) {
-      this.blocks.pop();
-    }
 
     newBlockTransactions.forEach((tx) => {
       tx.status = {

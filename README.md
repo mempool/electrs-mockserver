@@ -11,7 +11,7 @@ Place a mempool.space mempool dump into /db named mempool.json
 
 ## Run
 ```bash
-ts-node src/index.js
+ts-node src/index.ts
 ```
 
 ## Commands
