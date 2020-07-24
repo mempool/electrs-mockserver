@@ -1,4 +1,4 @@
-import { Transaction, Block } from './interfaces';
+import { Transaction, Block, Address } from './interfaces';
 import mockGenerator from './mock-generator';
 
 class Api {
@@ -69,6 +69,10 @@ class Api {
     }
     console.log('cant find block with hash' + hash + ' returning random block.');
     return mockGenerator.getRandomBlock();
+  }
+
+  getAddress(address: string): Address {
+    return {"address":"2MvFhfwmyb2Zci6YdivuTyJGKBvVEBwcLBE","chain_stats":{"funded_txo_count":315,"funded_txo_sum":13464123699,"spent_txo_count":314,"spent_txo_sum":13427390245,"tx_count":626},"mempool_stats":{"funded_txo_count":0,"funded_txo_sum":0,"spent_txo_count":0,"spent_txo_sum":0,"tx_count":0}};
   }
 
 }

@@ -68,6 +68,9 @@ class Server {
       .get('/stop-auto', (req: Request, res: Response) => { mockGenerator.setAuto(false); res.json('auto stopped'); })
 
       .get('/rbf', (req: Request, res: Response) => { res.send(mockGenerator.addRbfTransaction()); })
+      .get('/address/:address', (req: Request, res: Response) => res.json(api.getAddress(req.params.address)))
+      .get('/address/:address/txs', (req: Request, res: Response) => res.json([]))
+
       ;
   }
 }

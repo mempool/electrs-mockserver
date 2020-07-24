@@ -15,7 +15,7 @@ class MockGenerator {
 
   constructor() {
     this.loadRandomTransactions();
-    this.addMempoolTransactions((INITIAL_BLOCKS_AMOUNT + 2) * 100);
+    this.addMempoolTransactions((INITIAL_BLOCKS_AMOUNT) * 100);
 
     for (let i = 0; i < INITIAL_BLOCKS_AMOUNT; i++) {
       this.createNewBlock();
@@ -119,6 +119,9 @@ class MockGenerator {
       'nonce': 2877743144,
       'bits': 387094518,
     };
+
+    newBlockTransactions.unshift(this.generateCoinbaseTransaction(template));
+
     console.log('Creating block #' + template.height, template.id);
     this.blocks.push(template);
 
@@ -132,10 +135,7 @@ class MockGenerator {
     });
 
     // Add transactions to block
-    this.blockTransactions[template.id] = [
-      this.generateCoinbaseTransaction(template),
-      ...newBlockTransactions
-    ];
+    this.blockTransactions[template.id] = newBlockTransactions;
   }
 
   getRandomTx(): Transaction {
