@@ -72,7 +72,11 @@ class Api {
   }
 
   getAddress(address: string): Address {
-    return {"address":"2MvFhfwmyb2Zci6YdivuTyJGKBvVEBwcLBE","chain_stats":{"funded_txo_count":315,"funded_txo_sum":13464123699,"spent_txo_count":314,"spent_txo_sum":13427390245,"tx_count":626},"mempool_stats":{"funded_txo_count":0,"funded_txo_sum":0,"spent_txo_count":0,"spent_txo_sum":0,"tx_count":0}};
+    return mockGenerator.addresses[address].address;
+  }
+
+  getAddressTransactions(address: string): Transaction[] {
+    return mockGenerator.addresses[address].transactions;
   }
 
   getAddressses(prefix: string) {

@@ -1,4 +1,4 @@
-import { Block, Transaction } from './interfaces';
+import { Block, Transaction, Address } from './interfaces';
 import * as fs from 'fs';
 
 const INITIAL_BLOCKS_AMOUNT = 10;
@@ -11,6 +11,7 @@ class MockGenerator {
   blocks: Block[] = [];
   mempoolTransactions: Transaction[] = [];
   randomTransactions: Transaction[] = [];
+  addresses: { [address: string]:  { address: Address, transactions: Transaction[] } }  = {};
   blockTransactions: { [hash: string]:  Transaction[] }  = {};
 
   constructor() {
@@ -28,7 +29,7 @@ class MockGenerator {
   }
 
   addBisqTransaction() {
-    this.mempoolTransactions.push(
+    this.addTransactionToMempool(
       {'txid':'9ea4949cd3accdb4317e507937198ab5bc0bc07040079a9c8a2956fdbb054ed4','version':1,'locktime':0,'vin':[{'txid':'0c0ad832044d4fb6fa3210bbc478430fbf712386c1e644dd6aa3fec1611e3148','vout':0,'prevout':{'scriptpubkey':'76a91483882a62fdb3d6640cc665f80a3d511a5bcf0b3188ac','scriptpubkey_asm':'OP_DUP OP_HASH160 OP_PUSHBYTES_20 83882a62fdb3d6640cc665f80a3d511a5bcf0b31 OP_EQUALVERIFY OP_CHECKSIG','scriptpubkey_type':'p2pkh','scriptpubkey_address':'1CzUe5cy84JgJG7jQqjich6P9qXhUtZCX1','value':620},'scriptsig':'47304402203f327ef19b4853f6331d4fd73f2ffff687c17030955f9950b0d6360a1c0c142102206e913f87d2db80a8ff960ca1eecd595a03d042207e3e8fd149d15b651584ae8101210291096355cf995d7c961c50f2b319498b9513c2a51586dd7a2425c0084bbebef2','scriptsig_asm':'OP_PUSHBYTES_71 304402203f327ef19b4853f6331d4fd73f2ffff687c17030955f9950b0d6360a1c0c142102206e913f87d2db80a8ff960ca1eecd595a03d042207e3e8fd149d15b651584ae8101 OP_PUSHBYTES_33 0291096355cf995d7c961c50f2b319498b9513c2a51586dd7a2425c0084bbebef2','is_coinbase':false,'sequence':4294967295},{'txid':'0401cafaee7684b7b5ff119377a96096b07c25e872ed5d1d841c44da3618b861','vout':0,'prevout':{'scriptpubkey':'76a91453df36e60de2636fd331fd901c6581b99afc9cf188ac','scriptpubkey_asm':'OP_DUP OP_HASH160 OP_PUSHBYTES_20 53df36e60de2636fd331fd901c6581b99afc9cf1 OP_EQUALVERIFY OP_CHECKSIG','scriptpubkey_type':'p2pkh','scriptpubkey_address':'18eUV8kcv3BA7fghsSZfjTesRGi5e4dG8Q','value':9763},'scriptsig':'483045022100c7c87237eb817d8239ca81d5d7f61cb50af7601f91e17367c317c977ee3d44860220751292858e2061825df647c62a022fe9c29fc1ccb8c5c8edf3abb05de0d27fe50121023ae2ad208bdcccf6dcded15dde5c25361f9b24fe49e21a1bc0e0c43d83ae9aff','scriptsig_asm':'OP_PUSHBYTES_72 3045022100c7c87237eb817d8239ca81d5d7f61cb50af7601f91e17367c317c977ee3d44860220751292858e2061825df647c62a022fe9c29fc1ccb8c5c8edf3abb05de0d27fe501 OP_PUSHBYTES_33 023ae2ad208bdcccf6dcded15dde5c25361f9b24fe49e21a1bc0e0c43d83ae9aff','is_coinbase':false,'sequence':4294967295},{'txid':'d1aa28bdc2aa23721d3cd752096e5d63b4a7e97b1108cad2a22ef6fa5e119594','vout':0,'prevout':{'scriptpubkey':'76a914e278a3943077f29a9d1e708d482cc247726b466088ac','scriptpubkey_asm':'OP_DUP OP_HASH160 OP_PUSHBYTES_20 e278a3943077f29a9d1e708d482cc247726b4660 OP_EQUALVERIFY OP_CHECKSIG','scriptpubkey_type':'p2pkh','scriptpubkey_address':'1MeUEVpjtUbvQhkCAEa4wUSAVmiKXZdtpZ','value':10500000},'scriptsig':'463043021f569532a51e772c887f43fb4708f7d1172614e053e01005d9d0d6d1849ec4b102201fa0b5a2a25092fe07cf728bafbff0fd0de0dd64ca332f80043bc84f556ed50b0121032f7fb9837b4af2669381f2837637d9553d61815fa8c94f509707c6ad8407a0de','scriptsig_asm':'OP_PUSHBYTES_70 3043021f569532a51e772c887f43fb4708f7d1172614e053e01005d9d0d6d1849ec4b102201fa0b5a2a25092fe07cf728bafbff0fd0de0dd64ca332f80043bc84f556ed50b01 OP_PUSHBYTES_33 032f7fb9837b4af2669381f2837637d9553d61815fa8c94f509707c6ad8407a0de','is_coinbase':false,'sequence':4294967295}],'vout':[{'scriptpubkey':'76a914d26402eddc4e3e4e056806db84d0c1d0aa64e4b788ac','scriptpubkey_asm':'OP_DUP OP_HASH160 OP_PUSHBYTES_20 d26402eddc4e3e4e056806db84d0c1d0aa64e4b7 OP_EQUALVERIFY OP_CHECKSIG','scriptpubkey_type':'p2pkh','scriptpubkey_address':'1LBSiCfqExVi4guv269zXAB4PpCjDJxa1j','value':10325},{'scriptpubkey':'76a9146edab495aa676a00212c1ee641a7820cd77cc1a088ac','scriptpubkey_asm':'OP_DUP OP_HASH160 OP_PUSHBYTES_20 6edab495aa676a00212c1ee641a7820cd77cc1a0 OP_EQUALVERIFY OP_CHECKSIG','scriptpubkey_type':'p2pkh','scriptpubkey_address':'1B79L28kgaiuytndJziEN6sDr5C7ag4XQx','value':1500000},{'scriptpubkey':'76a914c9b89b5f2cb9f71cc75500dff840e497834d129688ac','scriptpubkey_asm':'OP_DUP OP_HASH160 OP_PUSHBYTES_20 c9b89b5f2cb9f71cc75500dff840e497834d1296 OP_EQUALVERIFY OP_CHECKSIG','scriptpubkey_type':'p2pkh','scriptpubkey_address':'1KPbyGkqjmrS3gn5DW7LvG1ie5t2NYRhLk','value':8995958}],'size':553,'weight':2212,'fee':4100,'status':{'confirmed':false}}
     );
   }
@@ -44,7 +45,7 @@ class MockGenerator {
     const txHash = this.getRandomTxHash();
     this.lastRbfTxId = txHash;
     console.log('******* RBF Transaction *****', txHash);
-    this.mempoolTransactions.push({
+    this.addTransactionToMempool({
         'txid': txHash,
         'version': 2,
         'locktime': 632699,
@@ -159,8 +160,76 @@ class MockGenerator {
       console.log('Creating transaction', randomTx.txid);
       delete randomTx['firstSeen'];
       delete randomTx['feePerVsize'];
-      this.mempoolTransactions.push(randomTx);
+      this.addTransactionToMempool(randomTx);
     }
+  }
+
+  private addTransactionToMempool(tx: Transaction) {
+    tx.vin.forEach((vin) => {
+      if (vin.prevout && this.addresses[vin.prevout.scriptpubkey_address]) {
+        if (this.addresses[vin.prevout.scriptpubkey_address].transactions.indexOf(tx) === -1) {
+          this.addresses[vin.prevout.scriptpubkey_address].transactions.push(tx);
+          this.addresses[vin.prevout.scriptpubkey_address].address.mempool_stats.tx_count++;
+          this.addresses[vin.prevout.scriptpubkey_address].address.mempool_stats.spent_txo_count++;
+          this.addresses[vin.prevout.scriptpubkey_address].address.mempool_stats.spent_txo_sum += vin.prevout.value;
+        }
+      } else if (vin.prevout) {
+        this.addresses[vin.prevout.scriptpubkey_address] = {
+          address: {
+            address: vin.prevout.scriptpubkey_address,
+            chain_stats: {
+              funded_txo_count: 0,
+              funded_txo_sum: 0,
+              spent_txo_count: 0,
+              spent_txo_sum: 0,
+              tx_count: 0,
+            },
+            mempool_stats: {
+              funded_txo_count: 0,
+              funded_txo_sum: 0,
+              spent_txo_count: 1,
+              spent_txo_sum: vin.prevout.value,
+              tx_count: 1,
+            }
+          },
+          transactions: [tx]
+        };
+      }
+    });
+
+    tx.vout.forEach((vout) => {
+      if (vout.scriptpubkey_address && this.addresses[vout.scriptpubkey_address]) {
+        if (this.addresses[vout.scriptpubkey_address].transactions.indexOf(tx) === -1) {
+          this.addresses[vout.scriptpubkey_address].transactions.push(tx);
+          this.addresses[vout.scriptpubkey_address].address.mempool_stats.tx_count++;
+          this.addresses[vout.scriptpubkey_address].address.mempool_stats.funded_txo_count++;
+          this.addresses[vout.scriptpubkey_address].address.mempool_stats.funded_txo_sum += vout.value;
+        }
+      } else if (vout.scriptpubkey_address) {
+        this.addresses[vout.scriptpubkey_address] = {
+          address: {
+            address: vout.scriptpubkey_address,
+            chain_stats: {
+              funded_txo_count: 0,
+              funded_txo_sum: 0,
+              spent_txo_count: 0,
+              spent_txo_sum: 0,
+              tx_count: 0,
+            },
+            mempool_stats: {
+              funded_txo_count: 1,
+              funded_txo_sum: vout.value,
+              spent_txo_count: 0,
+              spent_txo_sum: 0,
+              tx_count: 1,
+            }
+          },
+          transactions: [tx]
+        };
+      }
+    });
+
+    this.mempoolTransactions.push(tx);
   }
 
   private getTimeStamp(): number {
