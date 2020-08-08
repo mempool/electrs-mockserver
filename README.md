@@ -14,6 +14,18 @@ Place a mempool.space mempool dump into /db named mempool.json
 ts-node src/index.ts
 ```
 
+## Configure 
+for the mockserver: 
+```
+mkdir db
+cp mempool.json db
+```
+
+for the mempool-config.json
+```
+"ELECTRS_API_URL": "http://localhost:50001"
+```
+
 ## Commands
 
 http://localhost:50001/start-auto (starts automatic random transaction and block creation)
