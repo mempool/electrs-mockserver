@@ -39,4 +39,4 @@ testem.log
 .DS_Store
 Thumbs.db
 
-db/mempool.json
+db/cache.json

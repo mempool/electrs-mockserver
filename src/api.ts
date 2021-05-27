@@ -58,7 +58,7 @@ class Api {
     if (findblock) {
       return findblock.id;
     } else {
-      return '';
+      return mockGenerator.blocks[0].id;
     }
   }
 

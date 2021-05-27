@@ -68,6 +68,7 @@ class Server {
       .get('/stop-auto', (req: Request, res: Response) => { mockGenerator.setAuto(false); res.json('auto stopped'); })
 
       .get('/rbf', (req: Request, res: Response) => { res.send(mockGenerator.addRbfTransaction()); })
+      .get('/delete-random', (req: Request, res: Response) => { res.send(mockGenerator.deleteRandomTx()); })
       .get('/address/:address', (req: Request, res: Response) => res.json(api.getAddress(req.params.address)))
       .get('/address/:address/txs', (req: Request, res: Response) => res.json(api.getAddressTransactions(req.params.address)))
       .get('/address-prefix/:prefix', (req: Request, res: Response) => res.json(api.getAddressses(req.params.prefix)))
