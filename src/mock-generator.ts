@@ -1,13 +1,14 @@
 import { Block, Transaction, Address } from './interfaces';
 import * as fs from 'fs';
 
-const INITIAL_BLOCKS_AMOUNT = 10;
+const INITIAL_BLOCKS_AMOUNT = 1800;
+const BLOCK_SIZE = 4000000;
 
 class MockGenerator {
   rbfFee = 6825;
   lastRbfTxId = '';
   auto = false;
-  tip: number = 633008;
+  tip: number = 0;
   blocks: Block[] = [];
   mempoolTransactions: Transaction[] = [];
   randomTransactions: Transaction[] = [];
@@ -16,7 +17,7 @@ class MockGenerator {
 
   constructor() {
     this.loadRandomTransactions();
-    this.addMempoolTransactions((INITIAL_BLOCKS_AMOUNT) * 100);
+    this.addMempoolTransactions(1000);
 
     for (let i = 0; i < INITIAL_BLOCKS_AMOUNT; i++) {
       this.createNewBlock();
@@ -108,7 +109,19 @@ class MockGenerator {
   }
 
   createNewBlock(): void {
-    const newBlockTransactions = this.mempoolTransactions.sort((a, b) => b['_feePerVsize'] - a['_feePerVsize'] ).splice(0, 100);
+    const sortedTransactions = this.mempoolTransactions.sort((a, b) => b['_feePerVsize'] - a['_feePerVsize'] );
+    const newBlockTransactions: Transaction[] = [];
+    let totalWeight = 0;
+    for (const tx of sortedTransactions) {
+      if (totalWeight + tx.weight < BLOCK_SIZE) {
+        newBlockTransactions.push(tx);
+        totalWeight += tx.weight;
+      } else {
+        break;
+      }
+    }
+
+    this.mempoolTransactions.splice(0, newBlockTransactions.length);
 
     this.tip++;
     const template = {
@@ -118,7 +131,7 @@ class MockGenerator {
       'timestamp': this.getTimeStamp(),
       'tx_count': newBlockTransactions.length,
       'size': newBlockTransactions.reduce((a, b) => a + b.size, 0),
-      'weight': newBlockTransactions.reduce((a, b) => a + b.weight, 0),
+      'weight': totalWeight,
       'merkle_root': this.getRandomBlockHash(),
       'previousblockhash': this.getRandomBlockHash(),
       'nonce': 2877743144,
@@ -155,6 +168,8 @@ class MockGenerator {
     for (let i = 0; i < amount; i++) {
       let randomTx = this.getRandomTx();
       randomTx = JSON.parse(JSON.stringify(randomTx));
+      randomTx.txid = this.getRandomTxHash();
+      /*
       randomTx.size = 10000;
       randomTx.weight = 40000;
       randomTx['vsize'] = 10000;
@@ -162,9 +177,10 @@ class MockGenerator {
       randomTx.fee = this.getRandomNumberBetween(1000, 100000) * 80;
       randomTx['_feePerVsize'] = randomTx.fee / 10000;
       randomTx.txid = this.getRandomTxHash();
-      console.log('Creating transaction', randomTx.txid);
-      delete randomTx['firstSeen'];
-      delete randomTx['feePerVsize'];
+      */
+     delete randomTx['firstSeen'];
+     delete randomTx['feePerVsize'];
+     console.log('Creating transaction', randomTx.txid);
       this.addTransactionToMempool(randomTx);
     }
   }
